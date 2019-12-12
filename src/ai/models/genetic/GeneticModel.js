@@ -28,9 +28,10 @@ export default class GeneticModel extends Model {
     console.info("cross here: ",crossOverPoint);
     // Swap values among parents
     for (let i = 0; i < crossOverPoint; i += 1) {
-        const temp = offspring1[i];
-        offspring1[i] = offspring2[i];
-        offspring2[i] = temp;
+      [offspring1[i], offspring2[i]] = this.swap(offspring1[i], offspring2[i]);
+        // const temp = offspring1[i];
+        // offspring1[i] = offspring2[i];
+        // offspring2[i] = temp;
     }
     const offspring = [offspring1, offspring2];
     // Replace the last 2 with the new offspring
@@ -41,10 +42,25 @@ export default class GeneticModel extends Model {
     return offspring;
   }
 
+  uniformCrossover(parents, crossChance){
+    const offspring1 = parents[0];
+    const offspring2 = parents[1];
+
+    for (let i = 0; i < offspring1.length; i += 1) {
+      if (Math.random() < crossChance) {
+        this.swap(offspring1[i], offspring2[i])
+      }
+    }
+  }
+
   mutate(chromosomes) {
     chromosomes.forEach(chromosome => {
       const mutationPoint = Math.floor(Math.random() * chromosomes.length);
       chromosome[mutationPoint] = (Math.random() - 0.5)*2;
     });
+  }
+
+  swap(a, b) {
+    return [b, a];
   }
 }
