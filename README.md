@@ -13,18 +13,18 @@ Rafael Roque      10295412
 O [jogo do Dinossauro do Chrome](https://cs.chromium.org/chromium/src/components/neterror/resources/offline.js?q=t-rex+package:%5Echromium$&dr=C&l=7) é aparece na página de erro de do Google Chrome, quando o navegador está offline. O objetivo do projeto é que o algoritmo evolutivo implementado encontre o dinossauro que consegue permanecer vivo por mais tempo, esquivando os obstáculos de maneira mais eficiente e que, portanto, consiga a maior pontuação.
 
 
-## How to Install
+## Como instalar
 
 ```sh
-npm run build
+npm run build // A MUDAR SE PA
 ```
 
 
-## How to Run
+## Como executar
 
 
 ```sh
-npm run start
+npm run start // A MUDAR SE PA
 ```
 
 Visit http://localhost:8080
