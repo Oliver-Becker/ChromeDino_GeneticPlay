@@ -1,4 +1,4 @@
-# Projeto de Automação do jogo do Dinossauro do Chrome 
+# Chrome Dino - Genetic Play
 
 ## Grupo
 Este projeto foi elaborado como projeto final da disciplina Sistemas Evolutivos e Aplicados à Robótica - SSC0713. 
@@ -28,5 +28,3 @@ npm run start
 ```
 
 Visit http://localhost:8080
-# ChromeDino_GeneticPlay
-# ChromeDino_GeneticPlay
