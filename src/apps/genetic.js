@@ -1,3 +1,4 @@
+import { format } from "path";
 import PriorityQueue from "priorityqueue";
 import 'babel-polyfill';
 import { CANVAS_WIDTH, CANVAS_HEIGHT } from '../game/constants';
@@ -8,13 +9,15 @@ import RandomModel from '../ai/models/random/RandomModel';
 const comparator = (a, b) => {
   const x = a.fitness;
   const y = b.fitness;
-  return (a.fitness > b.fitness)? 1: -1;
+//  console.info("TESTEEE %d %d", x, y);
+  return (a.fitness > b.fitness)? -1: 1;
 };
 // const DINO_COUNT = 10;
 
 let runner = null;
 
 const fitList = new PriorityQueue( {comparator} );
+const fitList2 = [];
 const rankList = [];
 const geneticModel = new GeneticModel();
 
@@ -23,7 +26,7 @@ let firstTime = true;
 function setup() {
   // Initialize the game Runner.
   runner = new Runner('.game', {
-    DINO_COUNT:3,
+    DINO_COUNT:10,
     onReset: handleReset,
     onCrash: handleCrash,
     onRunning: handleRunning
@@ -50,24 +53,19 @@ function handleReset(Dinos) {
   }
   else {
     // Train the model before restarting.
-    console.info('Training');
-    const chromosomes2 = [];
-    const chromosomes = rankList.map((dino) => dino.model.getChromosome());
-    Dinos.forEach((dino, i)=> {
-      chromosomes2[i] = dino.model.getChromosome();
-    });
-
-   // for(let k = 0; k < chromosomes2.length; k+=1){
-    //  console.info(chromosomes2[k]);
-   // }
-    
-    // console.info(chromosomes)
+    // console.info('Training');
+    let k;
+    const chromosomes = fitList2.map((dino) => dino.model.getChromosome());
+    const chromosomes2 = rankList.map((dino) => dino.model.getChromosome());
     // Clear rankList
-    fitList.clear();
+    fitList2.splice(0);
     rankList.splice(0);
     geneticModel.fit(chromosomes);
     Dinos.forEach((dino, i) => {
       dino.model.setChromosome(chromosomes[i]);
+    });
+    Dinos.forEach((dino, i) => {
+      dino.fitness = 0;
     });
   }
 }
@@ -84,11 +82,32 @@ function handleCrash(dino) {
   console.info("i was called");
   console.info("Fitness: %d", dino.fitness);
   fitList.push(dino);
-  if (!rankList.includes(dino)) {
+  let k;
+  if (!rankList.includes(dino)&& !fitList2.includes(dino)){
     rankList.unshift(dino);
+    if(fitList2.length === 0){
+      fitList2.push(dino);
+    }
+    else{
+      let flag=0;
+      for(k=0; k<fitList2.length; k+=1){
+        if(dino.fitness > fitList2[k].fitness){
+          fitList2.splice(k, 0, dino);
+          flag = 1;
+          break;
+        }
+      }
+      if(!flag){
+        fitList2.push(dino);
+      }
+    }
+
   }
-  
-  dino.fitness = 0; 
+  // for(k=0; k<fitList2.length; k+=1){
+  //   console.info("socorro: %d",fitList2[k].fitness);
+  // }
+
+  // dino.fitness = 0; 
 }
 
 function convertStateToVector(state) {

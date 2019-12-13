@@ -70,7 +70,6 @@ export default class TrexGroup {
         } else {
           const action = await this.onRunning( tRex, state );
           if (action === 1) {
-            console.info("terste= %f", state.obstacleX/CANVAS_WIDTH);
             if(state.obstacleX/CANVAS_WIDTH < 0.3 && state.obstacleType !== 'PTERODACTYL'){
               tRex.fitness += 5;
             } else if(state.obstacleX/CANVAS_WIDTH < 0.3 && state.obstacleType === 'PTERODACTYL' && state.obstacleY < 100){
