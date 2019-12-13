@@ -2,9 +2,12 @@ import Model from '../Model';
 
 export default class GeneticModel extends Model {
   train(chromosomes) {
+    this.populateNextGeneration(chromosomes, 0.5);
+    /*
     const parents = this.select(chromosomes);
     const offspring = this.crossOver(parents, chromosomes);
     this.mutate(offspring);
+    */
   }
 
   fit(chromosomes) {
@@ -14,6 +17,17 @@ export default class GeneticModel extends Model {
   select(chromosomes) {
     const parents = [chromosomes[0], chromosomes[1]];
     return parents;
+  }
+
+  populateNextGeneration(chromosomes, mutateRate) {
+    const fittest = chromosomes[0];
+
+    for (let i = 1; i < chromosomes.length; i += 1) {
+      chromosomes[i] = this.arithmeticRecombination([fittest, chromosomes[i]]);
+    }
+
+    this.mutate(chromosomes, mutateRate);
+    chromosomes[0] = fittest; // Keep the fittest unmutated
   }
 
   crossOver(parents, chromosomes) {
@@ -94,7 +108,34 @@ export default class GeneticModel extends Model {
     return offspring;
   }
 
-  mutate(chromosomes) {
+  // Mutates only one gene
+  singleMutation(chromosome) {
+
+  }
+
+  // Mutates all genes with some probability
+  globalMutation(chromosome) {
+    for (let i = 0; i < chromosome.length ; i += 1) {
+      if (Math.random() < 0.5) {
+        chromosome[i] = (Math.random() - 0.5)*2;
+      }
+    }
+  }
+
+  // Selects a random start and end gene index and inverts the order of the values inbetween
+  inversionMutation(chromosome) {
+
+  }
+
+  mutate(chromosomes, mutationRate) {
+    console.info("mutationRate: ", mutationRate);
+    for (let i = 0; i < chromosomes.length ; i += 1) {
+      if (Math.random() < mutationRate) {
+        this.globalMutation(chromosomes[i]);
+      }
+    }
+  }
+  mutateLegacy(chromosomes) {
     chromosomes.forEach(chromosome => {
       const mutationPoint = Math.floor(Math.random() * chromosomes.length);
       chromosome[mutationPoint] = (Math.random() - 0.5)*2;

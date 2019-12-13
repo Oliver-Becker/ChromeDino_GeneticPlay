@@ -1,5 +1,4 @@
 import { format } from "path";
-import PriorityQueue from "priorityqueue";
 import 'babel-polyfill';
 import { CANVAS_WIDTH, CANVAS_HEIGHT } from '../game/constants';
 import { Runner } from '../game';
@@ -16,7 +15,6 @@ const comparator = (a, b) => {
 
 let runner = null;
 
-const fitList = new PriorityQueue( {comparator} );
 const fitList2 = [];
 const rankList = [];
 const geneticModel = new GeneticModel();
@@ -26,7 +24,7 @@ let firstTime = true;
 function setup() {
   // Initialize the game Runner.
   runner = new Runner('.game', {
-    DINO_COUNT:10,
+    DINO_COUNT:500,
     onReset: handleReset,
     onCrash: handleCrash,
     onRunning: handleRunning
@@ -81,7 +79,6 @@ function handleRunning(dino, state) {
 function handleCrash(dino) {
   console.info("i was called");
   console.info("Fitness: %d", dino.fitness);
-  fitList.push(dino);
   let k;
   if (!rankList.includes(dino)&& !fitList2.includes(dino)){
     rankList.unshift(dino);
