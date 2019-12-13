@@ -120,6 +120,7 @@ export default class Trex {
     this.jumpCount = 0;
     this.jumpspotX = 0;
     this.fitness = 0;
+    this.faults = 0;
     this.init();
   }
 
@@ -450,7 +451,7 @@ function createAdjustedCollisionBox(box, adjustment) {
  * @return {boolean} Whether the boxes intersected.
  */
 function boxCompare(tRexBox, obstacleBox) {
-  let crashed = false;
+  let collision = false;
   const tRexBoxX = tRexBox.x;
   const tRexBoxY = tRexBox.y;
 
@@ -464,8 +465,8 @@ function boxCompare(tRexBox, obstacleBox) {
     tRexBox.y < obstacleBox.y + obstacleBox.height &&
     tRexBox.height + tRexBox.y > obstacleBox.y
   ) {
-    crashed = true;
+    collision = true;
   }
 
-  return crashed;
+  return collision;
 }

@@ -2,7 +2,7 @@ import Model from '../Model';
 
 export default class GeneticModel extends Model {
   train(chromosomes) {
-    this.populateNextGeneration(chromosomes, 0.5);
+    this.populateNextGeneration(chromosomes, 0.35);
     /*
     const parents = this.select(chromosomes);
     const offspring = this.crossOver(parents, chromosomes);
@@ -23,7 +23,7 @@ export default class GeneticModel extends Model {
     const fittest = chromosomes[0];
 
     for (let i = 1; i < chromosomes.length; i += 1) {
-      chromosomes[i] = this.arithmeticRecombination([fittest, chromosomes[i]]);
+      chromosomes[i] = this.arithmeticRecombinationCrossOver([fittest, chromosomes[i]]);
     }
 
     this.mutate(chromosomes, mutateRate);
@@ -98,7 +98,7 @@ export default class GeneticModel extends Model {
     return [offspring1, offspring2];
   }
 
-  arithmeticRecombination(parents) {
+  arithmeticMeanCrossOver(parents) {
     const parent1 = parents[0];
     const offspring = parents[1];
     for (let i = 0; i < offspring.length; i += 1) {
@@ -108,23 +108,40 @@ export default class GeneticModel extends Model {
     return offspring;
   }
 
+  // Each resulting gene of this CrossOver will be a random number between the lower gene of
+  // parents -10% and the higher gene of the parents +10%
+  arithmeticRecombinationCrossOver(parents) {
+    const parent1 = parents[0];
+    const offspring = parents[1];
+    for (let i = 0; i < offspring.length; i += 1) {
+      // Get the genes of the parents
+      let gene1 = parent1[i]; 
+      let gene2 = offspring[i];
+      // Make sure that the gene 1 is higher than the gene2
+      [gene1, gene2] = gene1 > gene2 ? [gene1, gene2] : this.swap(gene1, gene2);
+      gene1 *= 1.1; // Adds the 10%
+      gene2 *= 0.9; // Subtracts the 10%
+      const range = gene1 - gene2;
+      offspring[i] = gene2 + (Math.random() * range);
+    }
+
+    return offspring;
+  }
+
   // Mutates only one gene
   singleMutation(chromosome) {
-
+    const mutationPoint = Math.floor(Math.random() * chromosome.length);
+    chromosome[mutationPoint] *= Math.random() + 0.5;
   }
 
   // Mutates all genes with some probability
   globalMutation(chromosome) {
     for (let i = 0; i < chromosome.length ; i += 1) {
-      if (Math.random() < 0.5) {
-        chromosome[i] = (Math.random() - 0.5)*2;
+      if (Math.random() < 0.25) {
+        // Multiply the gene by a random number between 0.5 and 1.5
+        chromosome[i] *= (Math.random() + 0.5); 
       }
     }
-  }
-
-  // Selects a random start and end gene index and inverts the order of the values inbetween
-  inversionMutation(chromosome) {
-
   }
 
   mutate(chromosomes, mutationRate) {
@@ -135,6 +152,7 @@ export default class GeneticModel extends Model {
       }
     }
   }
+
   mutateLegacy(chromosomes) {
     chromosomes.forEach(chromosome => {
       const mutationPoint = Math.floor(Math.random() * chromosomes.length);

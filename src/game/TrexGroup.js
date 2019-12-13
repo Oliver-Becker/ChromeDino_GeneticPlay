@@ -69,20 +69,30 @@ export default class TrexGroup {
           this.onCrash(tRex, state );
         } else {
           const action = await this.onRunning( tRex, state );
-          if (action === 1) {
+          if (action === 1) { // Jump action
+            tRex.setDuck(false);
+            tRex.startJump();
+
             if(state.obstacleX/CANVAS_WIDTH < 0.3 && state.obstacleType !== 'PTERODACTYL'){
-              tRex.fitness += 5;
+              tRex.fitness += 1;
             } else if(state.obstacleX/CANVAS_WIDTH < 0.3 && state.obstacleType === 'PTERODACTYL' && state.obstacleY < 100){
               tRex.fitness -= 10;
+              tRex.faults += 1;
+              console.info("One more fault. Total = ", tRex.faults);
+              if (tRex.faults > 10) {
+                console.info("Killing this dino! Too much faults...");
+                crashes += 1;
+                tRex.crashed = true;
+                this.onCrash(tRex, state );
+              }
             } else if(state.obstacleX/CANVAS_WIDTH < 0.3 && state.obstacleType === 'PTERODACTYL'){
-              tRex.fitness += 5;    
+              tRex.fitness += 1;    
             } else{
               tRex.fitness -= 1;
             }
             // console.log(tRex.fitness);
             
-            tRex.startJump();
-          } else if (action === -1) {
+          } else if (action === -1) { // Duck action
             if (tRex.jumping) {
               // Speed drop, activated only when jump key is not pressed.
               tRex.setSpeedDrop();

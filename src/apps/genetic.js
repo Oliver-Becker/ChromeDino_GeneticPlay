@@ -24,7 +24,7 @@ let firstTime = true;
 function setup() {
   // Initialize the game Runner.
   runner = new Runner('.game', {
-    DINO_COUNT:500,
+    DINO_COUNT:100,
     onReset: handleReset,
     onCrash: handleCrash,
     onRunning: handleRunning
@@ -64,6 +64,7 @@ function handleReset(Dinos) {
     });
     Dinos.forEach((dino, i) => {
       dino.fitness = 0;
+      dino.faults = 0;
     });
   }
 }
