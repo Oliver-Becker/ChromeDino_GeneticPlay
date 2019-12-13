@@ -119,7 +119,7 @@ export default class Trex {
     this.speedDrop = false;
     this.jumpCount = 0;
     this.jumpspotX = 0;
-
+    this.fitness = 0;
     this.init();
   }
 
