@@ -3,7 +3,7 @@
 ## Grupo
 Este projeto foi elaborado como projeto final da disciplina Sistemas Evolutivos e Aplicados à Robótica - SSC0713. 
 Os alunos do grupo são: 
-Gabriel Eluan - 000000, 
+Gabriel Eluan - 10734453, 
 Gabriela Chavez - 10295440, 
 Óliver Becker - 10284890, 
 Rafael Roque - 10295412.
