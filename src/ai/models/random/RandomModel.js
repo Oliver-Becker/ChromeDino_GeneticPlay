@@ -4,8 +4,7 @@ export default class RandomModel extends Model {
   weights = [];
   biases = [];
 
-  init() {
-    
+  init() {    
     this.randomize();
   }
 
@@ -18,7 +17,6 @@ export default class RandomModel extends Model {
       this.weights[3] * inputX[3] +
       this.weights[4] * inputX[4] +
       this.biases[0];
-
 
       let aux;
       if(y < -.1)

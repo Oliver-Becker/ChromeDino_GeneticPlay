@@ -1,5 +1,6 @@
 import Runner from './Runner';
 import Trex, { checkForCollision } from './Trex';
+import { CANVAS_WIDTH } from './constants';
 
 export default class TrexGroup {
   onReset = noop;
@@ -57,7 +58,7 @@ export default class TrexGroup {
       obstacleY: obstacle.yPos,
       obstacleWidth: obstacle.width,
       obstacleType: obstacle.typeConfig.type,
-      speed: Runner.instance_.currentSpeed
+      speed: Runner.instance_.currentSpeed,
     };
     this.tRexes.forEach(async (tRex) => {
       if (!tRex.crashed) {
@@ -69,6 +70,18 @@ export default class TrexGroup {
         } else {
           const action = await this.onRunning( tRex, state );
           if (action === 1) {
+            console.info("terste= %f", state.obstacleX/CANVAS_WIDTH);
+            if(state.obstacleX/CANVAS_WIDTH < 0.3 && state.obstacleType !== 'PTERODACTYL'){
+              tRex.fitness += 5;
+            } else if(state.obstacleX/CANVAS_WIDTH < 0.3 && state.obstacleType === 'PTERODACTYL' && state.obstacleY < 100){
+              tRex.fitness -= 10;
+            } else if(state.obstacleX/CANVAS_WIDTH < 0.3 && state.obstacleType === 'PTERODACTYL'){
+              tRex.fitness += 5;    
+            } else{
+              tRex.fitness -= 1;
+            }
+            // console.log(tRex.fitness);
+            
             tRex.startJump();
           } else if (action === -1) {
             if (tRex.jumping) {
@@ -77,6 +90,8 @@ export default class TrexGroup {
             } else if (!tRex.jumping && !tRex.ducking) {
               // Duck.
               tRex.setDuck(true);
+              if(state.obstacleX/CANVAS_WIDTH < 0.02 && state.obstacleType === 'PTERODACTYL' && state.obstacleY < 100)
+                tRex.fitness += 5;
             }
           }
         }
